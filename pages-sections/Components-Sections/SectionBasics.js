@@ -276,16 +276,16 @@ export default function SectionBasics(props) {
                     cellStyle={tableCellStyle}
                   />
                 )}
-                {product?.product_history?.product_image &&
+                {product?.product_history?.product_info_url &&
                   renderTableRow(
                     "Product Information URL",
                     <a
-                      href={product.product_history.product_image}
+                      href={product.product_history.product_info_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#1976d2", textDecoration: "underline" }}
                     >
-                      {product.product_history.product_image}
+                      {product.product_history.product_info_url}
                     </a>,
                     tableCellStyle
                   )}
