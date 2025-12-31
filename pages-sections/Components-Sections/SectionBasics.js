@@ -53,30 +53,42 @@ export default function SectionBasics(props) {
   };
 
   useEffect(() => {
+      let isMounted = true;
     const loadImages = async () => {
       try {
+        setIsLoading(true);
+        setProductImageUrl(null);
+      setCompanyLogoUrl(null);
         if (product?.product_history?.product_image) {
           const res = await api(
             `/getImage?imageName=${product.product_history.product_image}`,
             "blob"
           );
+           if (isMounted) {
           setProductImageUrl(URL.createObjectURL(res.data));
+        }
         }
         if (product?.company?.company_logo) {
           const res = await api(
             `/getImage?imageName=${product.company.company_logo}`,
             "blob"
           );
+          if (isMounted) {
           setCompanyLogoUrl(URL.createObjectURL(res.data));
+        }
         }
       } catch (err) {
         console.error("Image load error", err);
       }
+      finally {
+      if (isMounted) setIsLoading(false);
+    }
     };
 
     loadImages();
 
     return () => {
+      isMounted = false;
       if (productImageUrl) URL.revokeObjectURL(productImageUrl);
       if (companyLogoUrl) URL.revokeObjectURL(companyLogoUrl);
     };
@@ -155,10 +167,10 @@ export default function SectionBasics(props) {
         >
           {/* PRODUCT IMAGE */}
           <div style={{ width: isMobile ? "40%" : "45%", textAlign: "center" }}>
-            {product?.product_history?.product_image && (
+            {productImageUrl && (
               <img
                 // src="/product.png"
-                src={productImageUrl || "/product.png"}
+                src={productImageUrl}
                 alt="Product"
                 style={{
                   width: "100%",

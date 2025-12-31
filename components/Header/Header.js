@@ -57,7 +57,7 @@ export default function Header(props) {
   });
   const brandComponent = (
     <Link href="/" as="/">
-      <Button className={classes.title}><img  height={20} sr width={70} alt="logo" src={props.companyLogo||'/logo.png'} /></Button>
+      <Button className={classes.title}><img  height={70} sr width={100} alt="logo" src={props.companyLogo||'/company.png'} /></Button>
     </Link>
   );
 

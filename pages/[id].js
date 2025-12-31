@@ -1,12 +1,10 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Components from "./components";
 import SectionBasics from "../pages-sections/Components-Sections/SectionBasics";
 import api from '../apis'
 export default function ProductView() {
     const router = useRouter()
     const { id } = router.query
-    console.log("id::",id);
     const [data, setData] = React.useState();
     const getProductData = async () => {
         try {
