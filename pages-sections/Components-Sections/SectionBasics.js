@@ -53,20 +53,20 @@ export default function SectionBasics(props) {
   };
 
   useEffect(() => {
-      let isMounted = true;
+    let isMounted = true;
     const loadImages = async () => {
       try {
         setIsLoading(true);
         setProductImageUrl(null);
-      setCompanyLogoUrl(null);
+        setCompanyLogoUrl(null);
         if (product?.product_history?.product_image) {
           const res = await api(
             `/getImage?imageName=${product.product_history.product_image}`,
             "blob"
           );
-           if (isMounted) {
-          setProductImageUrl(URL.createObjectURL(res.data));
-        }
+          if (isMounted) {
+            setProductImageUrl(URL.createObjectURL(res.data));
+          }
         }
         if (product?.company?.company_logo) {
           const res = await api(
@@ -74,15 +74,15 @@ export default function SectionBasics(props) {
             "blob"
           );
           if (isMounted) {
-          setCompanyLogoUrl(URL.createObjectURL(res.data));
-        }
+            setCompanyLogoUrl(URL.createObjectURL(res.data));
+          }
         }
       } catch (err) {
         console.error("Image load error", err);
       }
       finally {
-      if (isMounted) setIsLoading(false);
-    }
+        if (isMounted) setIsLoading(false);
+      }
     };
 
     loadImages();
@@ -135,7 +135,7 @@ export default function SectionBasics(props) {
 
   const tableCellStyle = {
     border: "1px solid #646360",
-    textAlign: "center",
+    textAlign: "left",
     verticalAlign: "middle",
     fontSize: isMobile ? 13 : isTablet ? 16 : 22,
     padding: isMobile ? "6px" : "12px",
@@ -154,79 +154,93 @@ export default function SectionBasics(props) {
 
       }}
     >
-      <div style={{ border: "2px solid #646360", padding: isMobile ? 10 : 20 }}>
+      <div style={{ border: "2px solid #646360", padding: isMobile ? 20 : 40 }}>
         {/* TOP SECTION */}
         <div
           style={{
             display: "flex",
             flexDirection: "row",
-            ggap: isMobile ? 10 : 30,
+            gap: isMobile ? 10 : 30,
             alignItems: "center",
-            justifyContent: "space-between",
           }}
         >
           {/* PRODUCT IMAGE */}
-          <div style={{ width: isMobile ? "40%" : "45%", textAlign: "center" }}>
-            {productImageUrl && (
-              <img
-                // src="/product.png"
-                src={productImageUrl}
-                alt="Product"
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  maxHeight: isMobile ? 180 : 450,
-                  objectFit: "contain",
-                }}
-              />
-            )}
+          <div
+            style={{
+              width: isMobile ? "40%" : "45%",
+              height: isMobile ? 360 : 660,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              // src="/resize.png"
+               src={productImageUrl}
+              alt="Product"
+              style={{
+                maxHeight: isMobile ? 300 : 660,
+                maxWidth: "100%",
+                width: "auto",
+                objectFit: "contain",
+              }}
+            />
           </div>
 
           {/* RIGHT SIDE */}
           <div
             style={{
-              width: isMobile ? "55%" : "85%",
+              width: isMobile ? "55%" : "55%",
+              height: isMobile ? "auto" : 660,
+              minHeight: isMobile ? 360 : 660,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: isMobile ? 8 : 20,
+              justifyContent: "center",
               textAlign: "center",
+              gap: isMobile ? 14 : 24,
             }}
           >
+            {/* COMPANY LOGO */}
             <img
               src={companyLogoUrl || "/company.png"}
               alt="Company Logo"
               style={{
-                width: isMobile ? 90 : 180,
-                height: "auto",
-                // marginBottom: isMobile ? 10 : 30,
+                height: isMobile ? 120 : 250,
+                width: "auto",
+                objectFit: "contain",
               }}
             />
 
+            {/* TEXT */}
             <div
               style={{
-                fontSize: isMobile ? 13 : isTablet ? 20 : 25,
+                fontSize: isMobile ? 14 : 40,
                 fontWeight: "bold",
-                color: "#646360",
-                lineHeight: 1.3,
+                color: "#000099",
+                lineHeight: 1.2,
               }}
             >
               This is Genuine <br /> Mankind Product.
             </div>
 
+            {/* TICK */}
             <img
               src="/tick.png"
-              alt="Second Logo"
+              alt="Verified"
               style={{
-                width: isMobile ? 50 : 120,
-                height: "auto",
+                height: isMobile ? 90 : 180,
+                width: "auto",
+                objectFit: "contain",
               }}
             />
           </div>
+
         </div>
 
+
         {/* TABLE */}
-        <div style={{ marginTop: 30 }}>
+        <div style={{ marginTop: 10 }}>
           <TableContainer component={Paper} style={{ boxShadow: "none", width: "100%", padding: 10 }}>
             <Table sx={{ borderCollapse: "collapse", width: "100%", padding: 0, margin: 0 }}>
               <TableBody>
@@ -252,9 +266,18 @@ export default function SectionBasics(props) {
                 {renderTableRow("Customer Care Email id", product?.company?.email, tableCellStyle)}
                 {renderTableRow("Registration No.", product?.product_history?.registration_no, tableCellStyle)}
                 {renderTableRow("Manufactured By", product?.locations?.mfg_name, tableCellStyle)}
-                {renderTableRow("Antidote Statement", product?.product_history?.antidote_statement, tableCellStyle)}
+                {renderTableRow(
+                  "Antidote Statement",
+                  <div style={{ lineHeight: 1.4 }}>
+                    {product?.product_history?.antidote_statement || "Not Available"}
+                  </div>,
+                  {
+                    ...tableCellStyle,
+                    verticalAlign: "top",
+                  }
+                )}
 
-                <TableRow>
+                <TableRow style={{ height: 150 }}>
                   <TableCell style={tableCellStyle}>Cautionary Symbol</TableCell>
                   <TableCell style={tableCellStyle}>
                     {product?.product_history?.caution_logo &&
@@ -262,7 +285,7 @@ export default function SectionBasics(props) {
                       <img
                         src={cautionLogoMap[product.product_history.caution_logo].src}
                         alt="Caution"
-                        style={{ height: 40 }}
+                        style={{ height: 100, paddingLeft: "10px" }}
                       />
                     ) : (
                       "Not Applicable "
@@ -306,6 +329,32 @@ export default function SectionBasics(props) {
           </TableContainer>
         </div>
       </div>
+      {/* footer section */}
+      <div
+        style={{
+          marginTop: 10,
+          // paddingTop: 10,
+          // borderTop: "1px solid #646360",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <span style={{ fontSize: isMobile ? 12 : 28, color: "#333"}}>
+          Powered by:
+        </span>
+        <img
+          src={ "/digilize.png"}
+          alt="Company Logo"
+          style={{
+            height: isMobile ? 30 : 50,
+            width: "auto",
+            objectFit: "contain",
+          }}
+        />
+      </div>
       {isLoading && <Loader />}
     </div>
   );
@@ -314,8 +363,15 @@ export default function SectionBasics(props) {
 
 const renderTableRow = (label, value, cellStyle) => (
   <TableRow>
-    <TableCell style={cellStyle}>{label}</TableCell>
-    <TableCell style={cellStyle}>{value || "Not Available"}</TableCell>
+    <TableCell style={{
+      ...cellStyle,
+      width: "40%",
+
+    }}>{label}</TableCell>
+    <TableCell style={{
+      ...cellStyle,
+      width: "60%",
+    }}>{value || "Not Available"}</TableCell>
   </TableRow>
 );
 
@@ -328,8 +384,8 @@ const FileTableRow = ({ label, file, icon, onClick, cellStyle }) => (
           onClick={() => onClick(file)}
           style={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "left",
+            justifyContent: "left",
             gap: 8,
             cursor: "pointer",
           }}
